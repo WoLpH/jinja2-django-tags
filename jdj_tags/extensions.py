@@ -494,3 +494,16 @@ class DjangoCompat(DjangoCsrf, DjangoI18n, DjangoL10n, DjangoNow, DjangoStatic, 
         if cls is None:
             parser.fail("got unexpected tag '{}'".format(name))  # pragma: no cover
         return cls.parse(self, parser)
+
+    
+class LoadExtension(Extension):
+    """
+    The load tag is a no-op tag which is completely ignored. It makes it easily possible
+    to use regular Django templates with the Jinja2 template parser.
+    """
+    tags = set(['load'])
+
+    def parse(self, parser):
+        while not parser.stream.current.type == 'block_end':
+            parser.stream.next()
+        return []
